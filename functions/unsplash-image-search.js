@@ -16,13 +16,13 @@ exports.handler = async (event) => {
                 params: {
                     client_id: process.env.UNSPLASH_ACCESS_KEY,
                     query,
-                    // page,
-                    // collections,
-                    // color,
-                    // orientation,
-                    // content_filter: contentFilter,
-                    // per_page: perPage,
-                    // order_by: orderBy,
+                    page,
+                    collections,
+                    color,
+                    orientation,
+                    content_filter: contentFilter,
+                    per_page: perPage,
+                    order_by: orderBy,
                 }
             });
 
