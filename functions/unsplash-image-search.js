@@ -2,7 +2,10 @@ const axios = require('axios');
 
 exports.handler = async (event) => {
     try {
-        const { query, orientation, page, perPage, orderBy, collections, contentFilter, color } = event.queryStringParameters;
+        const {
+            // eslint-disable-next-line camelcase
+            query, orientation, page, per_page, order_by, collections, content_filter, color,
+        } = event.queryStringParameters;
 
         if (!query) {
             return {
@@ -20,12 +23,11 @@ exports.handler = async (event) => {
                     collections,
                     color,
                     orientation,
-                    content_filter: contentFilter,
-                    per_page: perPage,
-                    order_by: orderBy,
-                }
+                    content_filter,
+                    per_page,
+                    order_by,
+                },
             });
-
 
         return {
             statusCode: 200,
