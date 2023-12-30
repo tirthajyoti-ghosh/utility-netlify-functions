@@ -1,20 +1,29 @@
-const corsProxy = require('cors-anywhere');
-const express = require('express');
-const serverless = require('serverless-http');
+const axios = require('axios');
 
-const app = express();
+exports.handler = async (event) => {
+    const { httpMethod, body, headers } = event;
 
-// Create CORS Anywhere server
-const corsServer = corsProxy.createServer({
-    originWhitelist: [], // Allow all origins
-    requireHeaders: [],
-    removeHeaders: [],
-});
+    let url = event.path.split('/.netlify/functions/cors-proxy/')[1];
+    url = decodeURIComponent(url);
+    url = new URL(url);
 
-// Use CORS Anywhere server in Express middleware
-app.use((req, res) => {
-    corsServer.emit('request', req, res);
-});
+    Object.keys(event.queryStringParameters).forEach((key) => {
+        url.searchParams.append(key, event.queryStringParameters[key]);
+    });
 
-// Convert Express app to serverless function using serverless-http
-exports.handler = serverless(app);
+    const response = await axios({
+        method: httpMethod,
+        url,
+        data: body,
+        headers,
+    });
+
+    return {
+        statusCode: response.status,
+        body: JSON.stringify(response.data),
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        },
+    };
+};
